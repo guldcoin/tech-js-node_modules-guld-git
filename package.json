@@ -1,0 +1,44 @@
+{
+  "name": "guld-git",
+  "version": "0.1.0",
+  "description": "Guld git abstraction module.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/_mocha",
+    "lint": "eslint --env browser *.js*",
+    "fix": "eslint --fix *.js*"
+  },
+  "keywords": [
+    "guld",
+    "git"
+  ],
+  "author": "isysd",
+  "license": "MIT",
+  "dependencies": {
+    "guld-env": "^1.0.2",
+    "guld-fs": "^1.1.0",
+    "guld-spawn": "^1.0.0",
+    "isomorphic-git": "^0.21.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "eslint": "^5.0.1",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-es5": "^1.3.1",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-json": "^1.2.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "mocha": "^5.2.0",
+    "pre-commit": "^1.2.2"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ],
+  "readme": "README.md",
+  "engines": {
+    "node": ">=7"
+  }
+}
