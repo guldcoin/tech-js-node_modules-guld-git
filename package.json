@@ -16,9 +16,13 @@
   "license": "MIT",
   "dependencies": {
     "guld-env": "^1.0.2",
-    "guld-fs": "^1.1.0",
+    "guld-fs": "^1.2.1",
+    "guld-mail": "^0.2.0",
+    "guld-pass": "^0.5.1",
     "guld-spawn": "^1.0.0",
-    "isomorphic-git": "^0.21.0"
+    "guld-user": "^0.5.1",
+    "isomorphic-git": "^0.22.1",
+    "user-home": "^2.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
