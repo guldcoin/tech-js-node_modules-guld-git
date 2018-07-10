@@ -13,7 +13,7 @@ describe('guld-git', function () {
     await fs.rimraf('testrepo')
   })
   it('init', async function () {
-    var stat = await init('testrepo')
+    await init('testrepo')
     assert.isTrue((await fs.stat('testrepo/.git')).isDirectory())
   })
   it('status empty', async function () {
@@ -44,7 +44,7 @@ describe('guld-git', function () {
     assert.equal(stat[1], 'A  file1')
   })
   it('commit', async function () {
-    await commit('testrepo', message='test message')
+    await commit('testrepo', 'test message')
     var stat = await status(undefined, 'testrepo')
     assert.equal(stat, undefined)
   }).timeout(5000)

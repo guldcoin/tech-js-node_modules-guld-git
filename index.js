@@ -21,15 +21,9 @@ const ISOGITSHORT = {
   '*absent': null
 }
 var fs
-var pfs
-
+// var pfs
 
 /*
-  await this.clonep(`ledger/prices`, `https://github.com/guldcoin/ledger-prices.git`).catch(e => console.error)
-  await this.clonep(`keys/pgp`, `https://github.com/guldcoin/keys-pgp.git`).catch(e => console.error)
-  await this.clonep(`ledger/GULD`, `https://github.com/guldcoin/ledger-guld.git`).catch(e => console.error)
-*/
-
 async function isInitialized () {
   fs = fs || await getFS(false)
   var ps = await Promise.all([
@@ -64,11 +58,12 @@ async function isBehind (p, url) {
   if (!resp) return false
   return commit[0].oid !== resp.refs.heads['master']
 }
+*/
 
 async function init (cwd) {
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
-    await spawn('git', undefined, ['-C', cwd, 'init'])    
+    await spawn('git', undefined, ['-C', cwd, 'init'])
   } else {
     await isogit.init({
       fs: fs || await getFS(false),
@@ -77,12 +72,12 @@ async function init (cwd) {
   }
 }
 
-async function log (cwd, ref='HEAD', depth=1) {
+async function log (cwd, ref = 'HEAD', depth = 1) {
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
-    return (await spawn('git', undefined, ['-C', cwd, 'log', '-n', depth, '--pretty=oneline', ref])).trim().split('\n') 
+    return (await spawn('git', undefined, ['-C', cwd, 'log', '-n', depth, '--pretty=oneline', ref])).trim().split('\n')
   } else {
-    return await isogit.log({
+    return isogit.log({
       fs: fs || await getFS(false),
       dir: cwd,
       ref: ref,
@@ -91,7 +86,7 @@ async function log (cwd, ref='HEAD', depth=1) {
   }
 }
 
-async function status (filepath, cwd='.', short=true) {
+async function status (filepath, cwd = '.', short = true) {
   fs = fs || await getFS(false)
   if ((await getJS()).startsWith('node')) {
     var options = ['-C', cwd, 'status']
@@ -117,8 +112,8 @@ async function status (filepath, cwd='.', short=true) {
   }
 }
 
-async function listFileStatuses (cwd='.', short=true) {
-  var fs = fs || await getFS(false)
+async function listFileStatuses (cwd = '.', short = true) {
+  fs = fs || await getFS(false)
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   var files = await isogit.listFiles({
     fs: fs,
@@ -143,7 +138,7 @@ function statusIsogitToShort (stat, filepath) {
   if (short) return `${short} ${filepath}`
 }
 
-async function add (filepath, cwd='.') {
+async function add (filepath, cwd = '.') {
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
     spawn('git', undefined, ['-C', cwd, 'add', filepath || '-A'])
@@ -159,7 +154,7 @@ async function add (filepath, cwd='.') {
       var filestats = await listFileStatuses()
       for (var f in filestats) {
         if (/^[ ?]{1}[MD?]{1}"]/.match(filestats[f])) {
-           await isogit.add({
+          await isogit.add({
             fs: fs || await getFS(false),
             dir: cwd,
             gitdir: path.join(cwd, '.git'),
@@ -171,7 +166,7 @@ async function add (filepath, cwd='.') {
   }
 }
 
-async function remove (filepath, cwd='.', cached=false) {
+async function remove (filepath, cwd = '.', cached = false) {
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
     var options = ['-C', cwd, 'rm', filepath]
@@ -190,7 +185,7 @@ async function remove (filepath, cwd='.', cached=false) {
   }
 }
 
-async function commit (cwd, message='guld', user=null, time=null) {
+async function commit (cwd, message = 'guld', user = null, time = null) {
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   user = user || await getName()
   if ((await getJS()).startsWith('node')) {
@@ -213,6 +208,7 @@ async function commit (cwd, message='guld', user=null, time=null) {
 }
 
 async function fetch (cwd, remote, ref) {
+  var user = await getName()
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
     return spawn('git', undefined, ['-C', cwd, 'fetch', remote, ref])
@@ -230,8 +226,9 @@ async function fetch (cwd, remote, ref) {
 }
 
 async function pull (cwd, remote, ref) {
-  remote = remote || await getName()
-  ref = ref || await getName()
+  var user = await getName()
+  remote = remote || user
+  ref = ref || user
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
     return spawn('git', undefined, ['-C', cwd, 'pull', remote, ref])
@@ -249,12 +246,13 @@ async function pull (cwd, remote, ref) {
 }
 
 async function push (cwd, remote, ref) {
-  remote = remote || await getName()
-  ref = ref || await getName()
+  var user = await getName()
+  remote = remote || user
+  ref = ref || user
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   fs = fs || await getFS(false)
   if ((await getJS()).startsWith('node')) {
-    spawn('git', undefined, ['-C', path.join(home, partial), 'push', remote, ref])
+    spawn('git', undefined, ['-C', cwd, 'push', remote, ref])
   } else {
     var creds = await getPass(`${user}/git/github`)
     return isogit.push({
@@ -270,6 +268,7 @@ async function push (cwd, remote, ref) {
 }
 
 async function clone (cwd, filepath, url) {
+  var user = await getName()
   if (!cwd.startsWith(home)) cwd = path.resolve(cwd)
   if ((await getJS()).startsWith('node')) {
     spawn('git', undefined, ['-C', cwd, 'clone', filepath])
@@ -288,10 +287,8 @@ async function clone (cwd, filepath, url) {
   }
 }
 
+/*
 async function clonep (partial, url, ref) {
-  /*
-   * Clone or pull if already exists.
-   */
   pfs = pfs || await getFS()
   var p = partial
   if (!partial.startsWith(home)) p = path.join(home, partial)
@@ -313,6 +310,7 @@ async function clonep (partial, url, ref) {
     return pull(partial)
   }
 }
+*/
 
 module.exports = {
   init: init,
@@ -326,4 +324,3 @@ module.exports = {
   push: push,
   pull: pull
 }
-
