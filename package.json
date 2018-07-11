@@ -15,12 +15,12 @@
   "author": "isysd",
   "license": "MIT",
   "dependencies": {
-    "guld-env": "^1.0.5",
-    "guld-fs": "^1.2.6",
-    "guld-mail": "^0.2.2",
-    "guld-pass": "^0.5.3",
-    "guld-spawn": "^1.0.1",
-    "guld-user": "^0.5.3",
+    "guld-env": "^1.0.7",
+    "guld-fs": "^1.2.7",
+    "guld-mail": "^0.2.3",
+    "guld-pass": "^0.5.4",
+    "guld-spawn": "^1.0.2",
+    "guld-user": "^0.5.4",
     "isomorphic-git": "^0.22.1",
     "user-home": "^2.0.0"
   },
